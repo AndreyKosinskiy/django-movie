@@ -1,10 +1,14 @@
-from django.shortcuts import render
-from django.views.generic import View
+from django.shortcuts import render 
+from django.views.generic import ListView, DetailView
 from .models import Movie
 # Create your views here.
 
-class MovieViews(View):
+class MovieViews(ListView):
     """ Вывов списка фильмов """
-    def get(self,request):
-        movies = Movie.objects.all()
-        return render(request,'movies/movies.html',{'movie_list':movies})
+    model = Movie
+    queryset = Movie.objects.filter(draft=False)
+    template_name = 'movies/movies.html'
+
+class MovieDetailView(DetailView):
+    model = Movie
+    slug_field = 'url'
