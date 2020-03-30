@@ -43,7 +43,7 @@ class Genre(models.Model):
 
     class Meta:
         verbose_name = 'Жанр'
-        verbose_name = 'Жанры'
+        verbose_name_plural = 'Жанры'
 
 
 class Movie(models.Model):
