@@ -47,6 +47,7 @@ class MovieAdmin(admin.ModelAdmin):
     save_on_top = True
     save_as = True
     list_editable = ('draft',)
+    actions = ['publish', 'unpublish']
     form = MovieAdminForm
     readonly_fields = ('get_image',)
     fieldsets = (
@@ -74,6 +75,31 @@ class MovieAdmin(admin.ModelAdmin):
         return mark_safe(f'<img src={obj.poster.url} width="100" height="110">')
 
     get_image.short_description = "Постер"
+
+    def unpublish(self,request,queryset):
+        """ Снять с публикации """
+        row_update = queryset.update(draft = True)
+        if row_update == 1:
+            message_bit = ' 1 запись была обновлена'
+        else:
+            message_bit = f' {row_update} записи были обновлены'
+        self.message_user(request,f'{message_bit}')
+
+    def publish(self,request,queryset):
+        """ Опубликовать """
+        row_update = queryset.update(draft = False)
+        if row_update == 1:
+            message_bit = ' 1 запись была обновлена'
+        else:
+            message_bit = f' {row_update} записи были обновлены'
+        self.message_user(request,f'{message_bit}')
+
+    publish.short_description  = "Опубликовать"
+    publish.allowed_permissions = ('change', )
+
+    unpublish.short_description  = "Снять с публикации"
+    unpublish.allowed_permissions = ('change', )
+
 
 @admin.register(Reviews)
 class ReviewsAdmin(admin.ModelAdmin):
@@ -112,7 +138,6 @@ class MovieShotsAdmin(admin.ModelAdmin):
         return mark_safe(f'<img src={obj.image.url} width="50" height="60">')
 
     get_image.short_description = "Изображение"
-
 
 admin.site.register(RatingStar)
 
