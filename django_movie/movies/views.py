@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.views.generic import View, ListView, DetailView
 from .models import Movie, Actor,Genre
 from .forms import ReviewForm
@@ -42,8 +43,22 @@ class ActorDetailView(DetailView):
     template_name = 'movies/actor.html'
     slug_field = 'name'
 
-class FilterListView(GenreYear, ListView):
+class FilterListView(GenreYear,ListView):
     """ Фильтр Фильмов """
     def get_queryset(self):
         queryset = Movie.objects.filter(Q(year__in = self.request.GET.getlist('year')) | Q(genres__in = self.request.GET.getlist('genre')))
         return queryset
+
+class JsonFilterListView(ListView):
+    """ Фильтр Фильмов """
+    model = Movie
+
+    def get_queryset(self):
+        queryset = Movie.objects.filter(Q(year__in = self.request.GET.getlist('year')) | 
+                                        Q(genres__in = self.request.GET.getlist('genre'))
+                                        ).distinct().values('title','tagline','url','poster')
+        return queryset
+    
+    def get(self,request, *args, **kwargs):
+        queryset = list(self.get_queryset())
+        return JsonResponse({'movies':queryset}, safe=False)
