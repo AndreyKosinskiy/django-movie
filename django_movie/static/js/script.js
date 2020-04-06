@@ -10,14 +10,14 @@ function ajaxSend(url,params){
       .catch(error => console.error(error))
 }
 
-const forms = document.querySelector('form[name=filter]');
+// const forms = document.querySelector('form[name=filter]');
 
-forms.addEventListener('submit',function(e){
-    e.preventDefault();
-    let url = this.action;
-    let params = new URLSearchParams(new FormData(this)).toString();
-    ajaxSend(url,params)
-});
+// forms.addEventListener('submit',function(e){
+//     e.preventDefault();
+//     let url = this.action;
+//     let params = new URLSearchParams(new FormData(this)).toString();
+//     ajaxSend(url,params)
+// });
 
 function render(data){
     let template = Hogan.compile(html)
@@ -56,3 +56,17 @@ let html ='\
       </div>\
     </div>\
 {{/movies}}'
+
+const rating = document.querySelector('form[name=rating]')
+const ratingL = document.querySelector('#ratingL')
+
+rating.addEventListener('change',function(e){
+  let data = new FormData(this)
+  console.log(data)
+  fetch(`${this.action}`,{
+    method:'POST',
+    body:data
+  }).then(response => response.json())
+    .then(json => ratingL.innerText = json['checked_id'])
+    .catch(error => alert("Ошибка"))
+})
