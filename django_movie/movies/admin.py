@@ -3,6 +3,7 @@ from django import forms
 from django.utils.html import mark_safe
 from .models import Actor, Category, Genre, Movie, RatingStar, Reviews, Rating, MovieShots
 from ckeditor_uploader.widgets import CKEditorUploadingWidget 
+from modeltranslation.admin import TranslationAdmin
 # Register your models here.
 
 
@@ -10,13 +11,14 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 class MovieAdminForm(forms.ModelForm):
-    description = forms.CharField(label = "Описание", widget=CKEditorUploadingWidget())
+    description_ru = forms.CharField(label = "Описание", widget=CKEditorUploadingWidget())
+    description_en = forms.CharField(label = "Описание", widget=CKEditorUploadingWidget())
     class Meta:
         model = Movie
         fields = '__all__'
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(TranslationAdmin):
     """ Категории """
     list_display = ('id','name','url')
     list_display_links = ('name',)
@@ -38,7 +40,7 @@ class MovieShotsInline(admin.TabularInline):
     get_image.short_description = "Изображение"
 
 @admin.register(Movie)
-class MovieAdmin(admin.ModelAdmin):
+class MovieAdmin(TranslationAdmin):
     """ Фильмы """
     list_display = ('title', 'category', 'url', 'draft')
     list_filter = ('category','year')
@@ -108,7 +110,7 @@ class ReviewsAdmin(admin.ModelAdmin):
     readonly_fields = ('name','email')
 
 @admin.register(Actor)
-class ActorAdmin(admin.ModelAdmin):
+class ActorAdmin(TranslationAdmin):
     """ Актеры и рижессеры """
     list_display = ('name','age','get_image')
     fields = ('name','age','get_image')
@@ -120,7 +122,7 @@ class ActorAdmin(admin.ModelAdmin):
 
 
 @admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
+class GenreAdmin(TranslationAdmin):
     """ Жанры """
     fields = ('name','url')
 
@@ -130,7 +132,7 @@ class RatingAdmin(admin.ModelAdmin):
     fields = ('ip','star','movie')
 
 @admin.register(MovieShots)
-class MovieShotsAdmin(admin.ModelAdmin):
+class MovieShotsAdmin(TranslationAdmin):
     """ Кадры из фильмов """
     fields = ('title','get_image','movie')
 

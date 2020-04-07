@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
 
     'movies',
+    'contact',
     'ckeditor',
     'ckeditor_uploader',
     'snowpenguin.django.recaptcha3',
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -67,6 +70,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
+                 'django.core.context_processors.i18n',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -121,7 +125,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+gettext =  lambda s: s
 
+LANGUAGES = (
+    ('ru',gettext('Russian')),
+    ('en',gettext('English')),
+)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
@@ -211,3 +220,7 @@ RECAPTCHA_DEFAULT_ACTION = 'generic'
 RECAPTCHA_SCORE_THRESHOLD = 0.5
 
 SITE_ID = 1
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
