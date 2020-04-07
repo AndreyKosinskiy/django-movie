@@ -31,7 +31,8 @@ class MovieDetailView(GenreYear,DetailView):
         ip = self.get_client_ip(self.request)
         instance = Rating.objects.get(movie_id =  context["movie"].id, ip = ip )
         context["star_form"] = RaitingForm()
-        print(instance.star.value)
+        context["form"] = ReviewForm()
+
         context['checked_id'] = instance.star.value
 
         return context
